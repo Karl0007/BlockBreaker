@@ -37,11 +37,7 @@ public:
 			if (co == this) continue;
 			if ((abs(locx * 2 + m_lx - othx * 2 - co->m_lx) <= m_lx + co->m_lx) &&
 				(abs(locy * 2 + m_ly - othy * 2 - co->m_ly) <= m_ly + co->m_ly)) {
-				//cout << locx << " " << locy << endl;
-				//cout << othx << " " << othy << endl;
 				for (auto each : this->m_gameObject->m_components) {
-
-					//if (each->m_type == ComponentType::Speed)
 					each->OnCollider(*co);
 				}
 				if (m_all.count(co) && co->sta) {

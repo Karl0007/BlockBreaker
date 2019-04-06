@@ -8,6 +8,8 @@
 #include "Player.h"
 int Block::total = 0;
 bool Block::totpro = false;
+unordered_set<Ball*> Ball::all_balls = unordered_set<Ball*>();
+int Ball::total = 0;
 ComponentFactory* ComponentFactory::Instance = nullptr;
 
 ComponentFactory::ComponentFactory()

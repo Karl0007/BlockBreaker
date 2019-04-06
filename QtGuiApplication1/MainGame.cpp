@@ -12,6 +12,7 @@
 #include <fstream>
 #include <qapplication.h>
 #include"ConsoleWindow.h"
+#include"Buff.h"
 MainGame* MainGame::Instance = nullptr;
 
 MainGame::MainGame()
@@ -20,9 +21,10 @@ MainGame::MainGame()
 	is.open("KARL07");
 	KARL07__ = is.is_open();
 	Score = 0;
+	playing = false;
 #ifdef  GUI
 	w = new MainWindow;
-	w->setWindowTitle("BlockBreaker By Karl07 v0.4");
+	w->setWindowTitle("BlockBreaker By Karl07 v0.6");
 	w->show();
 #endif //  GUI
 #ifdef  CONSOLE
@@ -53,6 +55,7 @@ MainGame & MainGame::getInstance()
 
 void MainGame::Play()
 {
+	initGame();
 #ifdef GUI
 	w->m_scene->Updateing = true;
 #endif // GUI
@@ -79,10 +82,10 @@ void MainGame::delObject(GameObject * del)
 void MainGame::initGame() {
 	//GameObject * tmp;
 	//tmp = creatObject(350,300);
-	creatObject(350, 300)->addComponent<Ball>()->Start();
+	creatObject(300, 300)->addComponent<Ball>()->Start();
 	creatObject(0, 0)->addComponent<Wall>()->Start();
 	creatObject(300, 20)->addComponent<Player>()->Start(0.5, 100);
-	
+	//creatObject(500, 500)->addComponent<Buff>()->Start();
 	//static_cast<Ball*>(creatObject(350,300)->addComponent(ComponentType::Ball))->Start();
 	//static_cast<Wall*>(creatObject(0,0)->addComponent(ComponentType::Wall))->Start();
 	//static_cast<Player*>(creatObject(300, 0)->addComponent(ComponentType::Player))->Start(0.5, 100);
@@ -106,7 +109,7 @@ void MainGame::initGame() {
 
 void MainGame::Start()
 {
-	initGame();
+	//initGame();
 	//Update();
 #ifdef GUI
 	w->m_scene->paintGL();
@@ -139,6 +142,9 @@ void MainGame::Update()
 	Todelete.clear();
 	if (Block::total == 0 && Score != 0) {
 		End(true);
+	}
+	if (Ball::total == 0 && playing) {
+		End(false);
 	}
 #ifdef GUI
 	w->m_lable->setText(QString("Your Score\n") + QString::number(Score));

@@ -9,7 +9,8 @@ enum class ComponentType
 	Ball,
 	Block,
 	Wall,
-	Player
+	Player,
+	Buff
 };
 
 class Component

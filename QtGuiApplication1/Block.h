@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Render.h"
 #include "Collider.h"
+#include "Buff.h"
 class Block :
 	public Component
 {
@@ -30,9 +31,12 @@ public:
 		return this;
 	}
 	void setColorByLife() {
+		static default_random_engine e(time(0));
+		static uniform_real_distribution<double> R(-5, 1);
 		switch (life)
 		{
 		case 0:
+			if (R(e)>0)MainGame::getInstance().creatObject(m_gameObject->m_posx, m_gameObject->m_posy)->addComponent<Buff>()->Start();
 			MainGame::getInstance().delObject(m_gameObject);
 			return;
 		case 5:
@@ -45,7 +49,7 @@ public:
 			m_render->resetC(0, 0.5, 0.5);
 			return;
 		case 2:
-			m_render->resetC(0, 0.5, 0);
+			m_render->resetC(0, 0.9, 0);
 			return;
 		case 1:
 			m_render->resetC(0.8, 0.5, 0);
@@ -58,10 +62,14 @@ public:
 	void OnCollider(Component &oth) {
 		auto& o = static_cast<Collider&>(oth);
 		if (o.tag == "BALL" && !protect && !totpro) {
+			auto &pow = static_cast<Ball*>(o.m_gameObject->getComponent(ComponentType::Ball))->powerful;
+			if (pow) pow--;
 			MainGame::getInstance().addScore(100);
+			if (life == 6) MainGame::getInstance().creatObject(m_gameObject->m_posx, m_gameObject->m_posy)->addComponent<Buff>()->Start();
+
 			life--;
 			setColorByLife();
-			protect = 50;
+			protect = 10;
 			totpro = true;
 		}
 	}

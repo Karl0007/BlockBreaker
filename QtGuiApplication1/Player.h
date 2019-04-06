@@ -30,6 +30,11 @@ public:
 		//m_collider->Start(0, 0, m_lenth, 30, 0, "PLAYER");
 		return this;
 	}
+	void updateLen(float len) {
+		m_lenth += len;
+		m_render->sizex = m_lenth;
+		m_collider->m_lx = m_lenth;
+	}
 	void Update() {
 		if (MainGame::getInstance().getKey() == string("LEFT")) {
 			m_gameObject->m_posx -= m_speed * MainGame::getInstance().getDeltaTime();

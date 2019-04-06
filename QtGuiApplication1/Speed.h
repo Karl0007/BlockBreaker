@@ -12,11 +12,8 @@ public:
 	Speed() { m_type = ComponentType::Speed; start = false; }
 	void Update(){
 		if (!start) return;
-		//std::cout << vx * MainGame::getInstance().getDeltaTime() << std::endl;
 		m_gameObject->m_posx += vx * MainGame::getInstance().getDeltaTime();
 		m_gameObject->m_posy += vy * MainGame::getInstance().getDeltaTime();
-		//m_gameObject->m_posx += vx;
-		//m_gameObject->m_posy += vy;
 	}
 	Speed* Start(float x, float y) {
 		if (start) return this;
