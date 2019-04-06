@@ -32,12 +32,12 @@ public:
 	}
 	void Update() {
 		if (MainGame::getInstance().getKey() == string("LEFT")) {
-			m_gameObject->m_posx -= m_speed;
+			m_gameObject->m_posx -= m_speed * MainGame::getInstance().getDeltaTime();
 			m_gameObject->m_posx = max(m_gameObject->m_posx,.0f );
 
 		}
 		if (MainGame::getInstance().getKey() == string("RIGHT")) {
-			m_gameObject->m_posx += m_speed;
+			m_gameObject->m_posx += m_speed * MainGame::getInstance().getDeltaTime();
 			m_gameObject->m_posx = min(m_gameObject->m_posx, 600 - m_lenth);
 		}
 	}

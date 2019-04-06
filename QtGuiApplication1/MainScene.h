@@ -21,8 +21,6 @@ public:
 	void initializeGL();
 	void paintGL();
 	void resizeGL(int w, int h);
-	void keyPressEvent(QKeyEvent *e);
-	void keyReleaseEvent(QKeyEvent *e);
 	void addFun(function<void(void)> fun);
 	void DrawCircle0(float x, float y, float size, float r, float g, float b,int ts=16);
 	void DrawCircle(float x, float y, float size, float r, float g, float b, float rl, float gl, float bl, float len,int ts=16);

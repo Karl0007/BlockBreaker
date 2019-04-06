@@ -6,6 +6,7 @@
 #include <qmessagebox.h>
 #include <qaction.h>
 #include<qtextcodec.h>
+ConsoleWindow* ConsoleWindow::Instance = nullptr;
 MainWindow::MainWindow(QWidget *parent)
 	: QWidget(parent)
 {
@@ -39,8 +40,23 @@ MainWindow::MainWindow(QWidget *parent)
 	this->setLayout(Hlayout);
 
 	this->setFixedSize(QSize(770, 770));
-	QObject::connect(m_button, &QPushButton::clicked, [&]() {MainGame::getInstance().Play(); m_button->setEnabled(false); });
+	QObject::connect(m_button, &QPushButton::clicked, [&]() { m_button->setEnabled(false); MainGame::getInstance().Play(); });
 	//std::cout << m_scene->size().height() << " " << m_scene->size().width();
 }
 
 
+void MainWindow::keyPressEvent(QKeyEvent * e)
+{
+	if (e->key() == Qt::Key::Key_Left)
+		MainGame::getInstance().Key = "LEFT";
+	if (e->key() == Qt::Key::Key_Right)
+		MainGame::getInstance().Key = "RIGHT";
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent * e)
+{
+	if (e->key() == Qt::Key::Key_Left)
+		MainGame::getInstance().Key = "NULL";
+	if (e->key() == Qt::Key::Key_Right)
+		MainGame::getInstance().Key = "NULL";
+}

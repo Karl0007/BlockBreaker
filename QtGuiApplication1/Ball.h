@@ -44,18 +44,18 @@ public:
 		static uniform_int_distribution<int> u(0, 1);
 		//e.seed(123);
 		if (o.tag == "WALLSIDE") {
-			m_gameObject->m_posx -= m_speed->vx * 5;
+			m_gameObject->m_posx -= m_speed->vx * 1 * MainGame::getInstance().getDeltaTime();
 			m_speed->vx = -m_speed->vx;
 			m_speed->vy = m_speed->vy;
 		}
 		if (o.tag == "WALLTOP" || o.tag == "PLAYER" || o.tag == "GAMEOVER") {
-			m_gameObject->m_posy -= m_speed->vy * 5;
+			m_gameObject->m_posy -= m_speed->vy * 1 * MainGame::getInstance().getDeltaTime();
 			m_speed->vx = m_speed->vx;
 			m_speed->vy = -m_speed->vy;
 		}
 		if (o.tag == "BLOCK") {
-			m_gameObject->m_posx -= m_speed->vx * 5;
-			m_gameObject->m_posy -= m_speed->vy * 5;
+			m_gameObject->m_posx -= m_speed->vx * 1 * MainGame::getInstance().getDeltaTime();
+			m_gameObject->m_posy -= m_speed->vy * 1 * MainGame::getInstance().getDeltaTime();
 			m_speed->vx = R(e) * (u(e) ? -1 : 1);
 			m_speed->vy = R(e) * (u(e) ? -1 : 1);
 		}

@@ -6,8 +6,6 @@ using namespace std;
 MainScene::MainScene(QWidget *parent)
 	: QGLWidget(parent)
 {
-	this->grabKeyboard();
-	//this->grabMouse();
 }
 
 MainScene::~MainScene()
@@ -34,10 +32,13 @@ void MainScene::paintGL()
 	}
 	list.clear();
 	glPopMatrix();
-	MainGame::getInstance().DeltaTime = clock() - t;
 	if (Updateing) {
 		update();
 	}
+	MainGame::getInstance().DeltaTime = clock() - t;
+	//if (MainGame::getInstance().DeltaTime >= 10)
+	//	cout << MainGame::getInstance().DeltaTime << endl;
+
 }
 
 void MainScene::resizeGL(int w, int h)
@@ -84,20 +85,4 @@ void MainScene::DrawRect(float x, float y, float lx, float ly, float r, float g,
 {
 	DrawRect0(x, y, lx, ly, rl, gl, bl);
 	DrawRect0(x+len/2, y+len/2, lx-len, ly-len, r, g, b);
-}
-
-void MainScene::keyPressEvent(QKeyEvent * e)
-{
-	if (e->key() == Qt::Key::Key_Left) 
-		MainGame::getInstance().Key = "LEFT";
-	if (e->key() == Qt::Key::Key_Right)
-		MainGame::getInstance().Key = "RIGHT";
-}
-
-void MainScene::keyReleaseEvent(QKeyEvent * e)
-{
-	if (e->key() == Qt::Key::Key_Left)
-		MainGame::getInstance().Key = "NULL";
-	if (e->key() == Qt::Key::Key_Right)
-		MainGame::getInstance().Key = "NULL";
 }

@@ -7,6 +7,7 @@
 #include <qlabel.h>
 #include <qpushbutton.h>
 #include <qaction.h>
+#include "ConsoleWindow.h"
 //#include "ui_MainWindow.h"
 
 class MainWindow : public QWidget
@@ -15,7 +16,8 @@ class MainWindow : public QWidget
 public:
 	MainWindow(QWidget *parent = Q_NULLPTR);
 	~MainWindow(){}
-
+	void keyPressEvent(QKeyEvent *e);
+	void keyReleaseEvent(QKeyEvent *e);
 public:
 	MainScene *m_scene;
 	QLabel *m_lable;

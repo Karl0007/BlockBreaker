@@ -10,6 +10,8 @@
 #include <qstring.h>
 #include <qmessagebox.h>
 #include <fstream>
+#include <qapplication.h>
+#include"ConsoleWindow.h"
 MainGame* MainGame::Instance = nullptr;
 
 MainGame::MainGame()
@@ -17,9 +19,19 @@ MainGame::MainGame()
 	ifstream is;
 	is.open("KARL07");
 	KARL07__ = is.is_open();
-	w = new MainWindow;
-	w->show();
 	Score = 0;
+#ifdef  GUI
+	w = new MainWindow;
+	w->setWindowTitle("BlockBreaker By Karl07 v0.4");
+	w->show();
+#endif //  GUI
+#ifdef  CONSOLE
+	cout << "´ò×©¿é¿ØÖÆÌ¨°æ\n" << endl;
+	cout << "By ³ÂÊ¢âý 181860007\n" << endl;
+	cout << "github : Karl0007\n\nhttps://github.com/Karl0007/\n" << endl;
+	system("pause");
+#endif //  CONSOLE
+
 }
 
 
@@ -41,27 +53,13 @@ MainGame & MainGame::getInstance()
 
 void MainGame::Play()
 {
-	playing = true;
+#ifdef GUI
 	w->m_scene->Updateing = true;
+#endif // GUI
+	playing = true;
+	DeltaTime = 0;
 	Score = 0;
 	Start();
-	//thread t(&MainGame::Work,this);
-	//t.detach();
-}
-
-void MainGame::Work()
-{
-	Start();
-
-	//auto t = clock();
-	//while (playing) {
-	//	Update();
-	//	DeltaTime = clock() - t;
-	//	t = clock();
-	//	w->m_scene->paintGL();
-	//	//std::cout << DeltaTime << endl;
-	//}
-	//End();
 }
 
 GameObject * MainGame::creatObject(float x, float y)
@@ -79,56 +77,59 @@ void MainGame::delObject(GameObject * del)
 }
 
 void MainGame::initGame() {
-	GameObject * tmp;
+	//GameObject * tmp;
 	//tmp = creatObject(350,300);
 	creatObject(350, 300)->addComponent<Ball>()->Start();
 	creatObject(0, 0)->addComponent<Wall>()->Start();
-	creatObject(300, 0)->addComponent<Player>()->Start(0.5, 100);
+	creatObject(300, 20)->addComponent<Player>()->Start(0.5, 100);
 	
 	//static_cast<Ball*>(creatObject(350,300)->addComponent(ComponentType::Ball))->Start();
 	//static_cast<Wall*>(creatObject(0,0)->addComponent(ComponentType::Wall))->Start();
 	//static_cast<Player*>(creatObject(300, 0)->addComponent(ComponentType::Player))->Start(0.5, 100);
+#ifdef GUI
 	for (int x = 40,c=0; x <= 520; x += 75) {
 		for (int y = 600; y >= 450; y -= 50,c++) {
-			creatObject(x, y)->addComponent<Block>()->Start(c%6+1);
+			creatObject(x, y)->addComponent<Block>()->Start(c % 6 + 1);
 			//static_cast<Block*>(creatObject(x,y)->addComponent(ComponentType::Block))->Start(c%6+1);
 		}
 	}
+#endif // GUI
+#ifdef CONSOLE
+	for (int x = 40, c = 0; x <= 520; x += 120) {
+		for (int y = 600; y >= 450; y -= 80, c++) {
+			creatObject(x, y)->addComponent<Block>()->Start(1);
+			//static_cast<Block*>(creatObject(x,y)->addComponent(ComponentType::Block))->Start(c%6+1);
+		}
+	}
+#endif // CONSOLE
 }
 
 void MainGame::Start()
 {
-	playing = 1;
-	DeltaTime = 0;
 	initGame();
+	//Update();
+#ifdef GUI
 	w->m_scene->paintGL();
-	//auto obj = creatObject(200, 200);
-	//static_cast<Render*>(obj->addComponent(ComponentType::Render))->Start(1,50,50,10,1,0,0);
-	//static_cast<Speed*>(obj->addComponent(ComponentType::Speed))->Start(0.1, 0.1);
-	//static_cast<Collider*>(obj->addComponent(ComponentType::Collider))->Start(0,0,50,50,0);
-	//auto obj2 = creatObject(500, 500);
-	//static_cast<Render*>(obj2->addComponent(ComponentType::Render))->Start(0, 25, 0, 10, 0, 1, 0);
-	//static_cast<Collider*>(obj2->addComponent(ComponentType::Collider))->Start(-25, -25, 50, 50, 1);
-	//auto obj3 = creatObject(100, 100);
-	//static_cast<Ball*>(obj3->addComponent(ComponentType::Ball))->Start();
-	//auto obj4 = creatObject(0, 0);
-	//static_cast<Wall*>(obj4->addComponent(ComponentType::Wall))->Start();
-	//auto obj5 = creatObject(300, 300);
-	//static_cast<Block*>(obj5->addComponent(ComponentType::Block))->Start(3);
-	//obj5 = creatObject(400, 300);
-	//static_cast<Block*>(obj5->addComponent(ComponentType::Block))->Start(3);
-	//auto obj6 = creatObject(300, 30);
-	//<Player*>(obj6->addComponent(ComponentType::Player))->Start(0.5,100);
-
-
+#endif // GUI
+#ifdef CONSOLE
+	while (playing) {
+		auto t = clock();
+		Update();
+		//system("pause");
+		ConsoleWindow::getInstance().Clear();
+		DeltaTime = clock() - t;
+		Key = ConsoleWindow::getInstance().GetKey();
+		//cout << Key;
+		DeltaTime /= 2;
+		//cout << DeltaTime << endl;
+	}
+#endif // CONSOLE
 
 }
 
 void MainGame::Update()
 {
-	//cout << getKey() << endl;
 	for (auto x : m_objs) {
-		//cout << x->m_posx << " " << x->m_posy << endl;
 		x->Update();
 	}
 	for (auto x : Todelete) {
@@ -136,21 +137,36 @@ void MainGame::Update()
 		delete x;
 	}
 	Todelete.clear();
-	w->m_lable->setText(QString("Your Score\n") +QString::number(Score));
-	if (Block::total == 0 && Score!=0) {
+	if (Block::total == 0 && Score != 0) {
 		End(true);
 	}
+#ifdef GUI
+	w->m_lable->setText(QString("Your Score\n") + QString::number(Score));
+#endif // GUI
+
 }
 
 void MainGame::End(bool win)
 {
 	if (!playing) return;
-	//cout << "You Lose" << endl;
 	playing = false;
-	w->m_scene->Updateing = false;
 	for (auto x : m_objs) {
 		delObject(x);
 	}
+#ifdef CONSOLE
+	ConsoleWindow::getInstance().SetColor(11);
+	ConsoleWindow::getInstance().Clear();
+	if (win) {
+		cout << "You Win!"  <<"\nYour Scoure:" <<Score << endl;
+	}
+	else {
+		cout << "You Lose!" << "\nYour Scoure:" << Score << endl;
+	}
+	system("pause");
+#endif // CONSOLE
+
+#ifdef GUI
+	w->m_scene->Updateing = false;
 	if (win) {
 		QMessageBox::about(w, "You Win",QString("Your Score : ") + QString::number(Score));
 	}
@@ -158,6 +174,7 @@ void MainGame::End(bool win)
 		QMessageBox::about(w, "You Lose", QString("Your Score : ") + QString::number(Score));
 	}
 	w->m_button->setEnabled(1);
+#endif // GUI
 
 }
 
